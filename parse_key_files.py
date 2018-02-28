@@ -1,11 +1,14 @@
 #!/usr/bin/python
-import time
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, PatternMatchingEventHandler
 import os
+import sys
+import time
+
 import winreg
-from network_data import NetworkData
+from watchdog.events import PatternMatchingEventHandler
+from watchdog.observers import Observer
+
 from app_data import AppData
+from network_data import NetworkData
 
 
 def prepare_mesh_options(net_data, app_data):
@@ -64,7 +67,11 @@ class MeshKeysFileEventHandler(PatternMatchingEventHandler):
 
 
 if __name__ == "__main__":
-    mesh_keys_path = os.path.expanduser(r'~\Documents\Profile Tuning Suite\MESH')
+    if len(sys.argv) < 2:
+        print("Specify path to workspace!")
+        exit(1)
+
+    mesh_keys_path = os.path.expanduser(sys.argv[1])
     network_file = 'mesh_network_data.txt'
     app_file = 'mesh_app_data.txt'
     key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\WOW6432Node\Frontline Test Equipment\User Data')
